@@ -72,4 +72,5 @@ if st.button("Lancer la création ✨"):
             else:
                 st.error("Serveur saturé. Attendez un peu et réessayez.")
     else:
-        st.warning("Écrivez un nom d'animal.")st.info("💡 Version Gratuite. Pour obtenir des images 4K sans attente, contactez le support.")
+        st.warning("Écrivez un nom d'animal.")
+        st.info("💡 Version Gratuite. Pour obtenir des images 4K sans attente, contactez le support.")
