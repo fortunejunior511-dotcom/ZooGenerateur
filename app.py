@@ -7,16 +7,26 @@ st.set_page_config(page_title="ZooGénérateur Pro - Ultra HD", page_icon="💎"
 
 st.markdown("""
     <style>
-    .stButton>button { width: 100%; border-radius: 25px; height: 3.5em; background-color: #FF4B4B; color: white; font-weight: bold; }
-    .whatsapp-btn { background-color: #25D366; color: white; padding: 15px; text-align: center; border-radius: 25px; display: block; text-decoration: none; font-weight: bold; }
+    .stButton>button { width: 100%; border-radius: 25px; height: 3.5em; background-color: #FF4B4B; color: white; font-weight: bold; border: none; }
+    .whatsapp-btn { 
+        background-color: #25D366; 
+        color: white; 
+        padding: 15px; 
+        text-align: center; 
+        border-radius: 25px; 
+        display: block; 
+        text-decoration: none; 
+        font-weight: bold;
+        margin-top: 20px;
+    }
     </style>
     """, unsafe_allow_html=True)
 
 st.title("🦁 ZooGénérateur Pro")
+st.subheader("L'IA qui crée vos animaux en Haute Définition")
 st.write("---")
 
-# 2. Configuration de la Clé (C'est ici qu'on mettra l'argent)
-# Pour l'instant, on laisse vide. Quand tu auras 5$, on mettra ta clé ici.
+# 2. Configuration (La clé sera activée après ton premier encaissement)
 OPENAI_API_KEY = "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" 
 
 def generer_image_luxe(prompt_text):
@@ -31,31 +41,32 @@ def generer_image_luxe(prompt_text):
         )
         return response.data[0].url
     except Exception as e:
-        return str(e)
+        return "maintenance"
 
-# 3. Interface de vente
-st.subheader("🎨 Création d'image Ultra-Réaliste")
-animal = st.text_input("Décrivez l'animal de vos rêves :", placeholder="Un lion en armure dorée, style 3D Disney")
+# 3. Interface de saisie
+animal = st.text_input("Quel animal voulez-vous transformer en œuvre d'art ?", placeholder="Ex: Un guépard avec des lunettes de soleil en or")
 
-if st.button("Lancer la création (Version Premium) ✨"):
-    if "sk-xxx" in OPENAI_API_KEY:
-        st.error("🚨 Maintenance en cours sur le serveur HD. Veuillez utiliser l'option WhatsApp ci-dessous pour commander.")
+if st.button("Lancer la création Ultra HD ✨"):
+    if animal:
+        if "sk-xxx" in OPENAI_API_KEY:
+            st.warning("🚀 **Accès Premium Limité** : Le serveur HD est actuellement réservé aux commandes prioritaires via WhatsApp pour éviter la saturation.")
+        else:
+            with st.spinner("L'IA génère une image parfaite..."):
+                url_image = generer_image_luxe(animal)
+                if url_image != "maintenance":
+                    st.image(url_image, caption="Qualité Ultra HD générée par DALL-E 3", use_container_width=True)
+                else:
+                    st.error("Erreur de connexion au serveur de luxe.")
     else:
-        with st.spinner("L'IA génère une image parfaite..."):
-            url_image = generer_image_luxe(animal)
-            if "http" in url_image:
-                st.image(url_image, caption="Votre chef-d'œuvre est prêt !")
-            else:
-                st.error("Erreur de solde. Contactez le support.")
+        st.warning("Veuillez entrer une description.")
 
 st.write("---")
 
-# 4. Le bouton qui va remplir ta carte VISA
-st.subheader("💰 Commande Express")
-st.write("Recevez 5 images 4K de vos animaux préférés pour seulement 3 000 FCFA.")
+# 4. TON BOUTON DE PAIEMENT (WhatsApp)
+st.subheader("💰 Commande Express & Paiement Mobile")
+st.write("Recevez vos images 4K par WhatsApp sans aucune attente.")
 
-numero = "TON_NUMERO_ICI" # METS TON NUMÉRO ICI (Ex: 22507...)
-text_wa = f"Bonjour, je viens du site ZooGénérateur. Je veux commander un pack d'images HD."
-link = f"https://wa.me/{numero}?text={text_wa.replace(' ', '%20')}"
+# Ton numéro est configuré ici
+link_wa = "https://wa.me/2250554178128?text=Bonjour%20ZooGénérateur%2C%20je%20souhaite%20commander%20un%20pack%20d'images%20HD"
 
-st.markdown(f'<a href="{link}" class="whatsapp-btn">Commander par WhatsApp (Paiement Mobile)</a>', unsafe_allow_html=True)
+st.markdown(f'<a href="{link_wa}" class="whatsapp-btn">Commander mes images HD (Paiement Mobile)</a>', unsafe_allow_html=True)
