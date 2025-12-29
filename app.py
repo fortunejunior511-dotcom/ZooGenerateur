@@ -26,7 +26,7 @@ st.title("🦁 ZooGénérateur Pro")
 st.subheader("L'IA qui crée vos animaux en Haute Définition")
 st.write("---")
 
-# 2. Configuration (La clé sera activée après ton premier encaissement)
+# 2. Configuration
 OPENAI_API_KEY = "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" 
 
 def generer_image_luxe(prompt_text):
@@ -43,7 +43,7 @@ def generer_image_luxe(prompt_text):
     except Exception as e:
         return "maintenance"
 
-# 3. Interface de saisie
+# 3. Interface
 animal = st.text_input("Quel animal voulez-vous transformer en œuvre d'art ?", placeholder="Ex: Un guépard avec des lunettes de soleil en or")
 
 if st.button("Lancer la création Ultra HD ✨"):
@@ -62,11 +62,10 @@ if st.button("Lancer la création Ultra HD ✨"):
 
 st.write("---")
 
-# 4. TON BOUTON DE PAIEMENT (WhatsApp)
+# 4. TON BOUTON VERT (WhatsApp)
 st.subheader("💰 Commande Express & Paiement Mobile")
 st.write("Recevez vos images 4K par WhatsApp sans aucune attente.")
 
-# Ton numéro est configuré ici
 link_wa = "https://wa.me/2250554178128?text=Bonjour%20ZooGénérateur%2C%20je%20souhaite%20commander%20un%20pack%20d'images%20HD"
 
 st.markdown(f'<a href="{link_wa}" class="whatsapp-btn">Commander mes images HD (Paiement Mobile)</a>', unsafe_allow_html=True)
