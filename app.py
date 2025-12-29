@@ -1,57 +1,61 @@
 import streamlit as st
+from openai import OpenAI
 import requests
-import io
-from PIL import Image
 
-st.set_page_config(page_title="ZooGénérateur Pro", page_icon="🦁")
+# 1. Look Premium
+st.set_page_config(page_title="ZooGénérateur Pro - Ultra HD", page_icon="💎")
 
-# Style pour le bouton de paiement
 st.markdown("""
     <style>
-    .stButton>button { width: 100%; border-radius: 25px; background-color: #FF4B4B; color: white; font-weight: bold; }
-    .pay-button {
-        background-color: #28a745;
-        color: white;
-        padding: 15px;
-        text-align: center;
-        text-decoration: none;
-        display: block;
-        border-radius: 25px;
-        font-weight: bold;
-        margin-top: 10px;
-    }
+    .stButton>button { width: 100%; border-radius: 25px; height: 3.5em; background-color: #FF4B4B; color: white; font-weight: bold; }
+    .whatsapp-btn { background-color: #25D366; color: white; padding: 15px; text-align: center; border-radius: 25px; display: block; text-decoration: none; font-weight: bold; }
     </style>
     """, unsafe_allow_html=True)
 
 st.title("🦁 ZooGénérateur Pro")
+st.write("---")
 
-# Section Génération
-animal = st.text_input("Quel animal ?", placeholder="Ex: Un léopard en costume")
-if st.button("Essai Gratuit (Serveur Partagé) ✨"):
-    if animal:
-        with st.spinner("L'IA travaille... (Si ça bloque, recliquez)"):
-            API_URL = "https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5"
-            try:
-                response = requests.post(API_URL, json={"inputs": animal}, timeout=60)
-                if response.status_code == 200:
-                    image = Image.open(io.BytesIO(response.content))
-                    st.image(image, use_container_width=True)
-                else:
-                    st.error("Serveur saturé. Normal en version gratuite.")
-            except:
-                st.error("Délai dépassé. Recliquez !")
+# 2. Configuration de la Clé (C'est ici qu'on mettra l'argent)
+# Pour l'instant, on laisse vide. Quand tu auras 5$, on mettra ta clé ici.
+OPENAI_API_KEY = "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" 
+
+def generer_image_luxe(prompt_text):
+    try:
+        client = OpenAI(api_key=OPENAI_API_KEY)
+        response = client.images.generate(
+            model="dall-e-3",
+            prompt=prompt_text,
+            size="1024x1024",
+            quality="standard",
+            n=1,
+        )
+        return response.data[0].url
+    except Exception as e:
+        return str(e)
+
+# 3. Interface de vente
+st.subheader("🎨 Création d'image Ultra-Réaliste")
+animal = st.text_input("Décrivez l'animal de vos rêves :", placeholder="Un lion en armure dorée, style 3D Disney")
+
+if st.button("Lancer la création (Version Premium) ✨"):
+    if "sk-xxx" in OPENAI_API_KEY:
+        st.error("🚨 Maintenance en cours sur le serveur HD. Veuillez utiliser l'option WhatsApp ci-dessous pour commander.")
     else:
-        st.warning("Écrivez un nom.")
+        with st.spinner("L'IA génère une image parfaite..."):
+            url_image = generer_image_luxe(animal)
+            if "http" in url_image:
+                st.image(url_image, caption="Votre chef-d'œuvre est prêt !")
+            else:
+                st.error("Erreur de solde. Contactez le support.")
 
-st.markdown("---")
+st.write("---")
 
-# SECTION VENTE (Pour remplir ta carte Visa)
-st.subheader("🚀 Passez à la Version Ultra-Rapide")
-st.write("Marre d'attendre ? Recevez vos images en 4K, sans aucune attente et sans bug.")
+# 4. Le bouton qui va remplir ta carte VISA
+st.subheader("💰 Commande Express")
+st.write("Recevez 5 images 4K de vos animaux préférés pour seulement 3 000 FCFA.")
 
-# Remplace le numéro par le tien
-numero_whatsapp = "225XXXXXXXX" # METS TON NUMÉRO ICI
-message_vente = f"Bonjour, je souhaite acheter le Pack 10 images HD pour 5€"
-url_whatsapp = f"https://wa.me/{numero_whatsapp}?text={message_vente.replace(' ', '%20')}"
+numero = "TON_NUMERO_ICI" # METS TON NUMÉRO ICI (Ex: 22507...)
+text_wa = f"Bonjour, je viens du site ZooGénérateur. Je veux commander un pack d'images HD."
+link = f"https://wa.me/{numero}?text={text_wa.replace(' ', '%20')}"
 
-st.markdown(f'<a href="{url_whatsapp}" class="pay-button">Commander la version HD (5€) 💳</a>', unsafe_allow_html=True)
+st.markdown(f'<a href="{link}" class="whatsapp-btn">Commander par WhatsApp (Paiement Mobile)</a>', unsafe_allow_html=True)
